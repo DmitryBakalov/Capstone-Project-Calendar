@@ -26,5 +26,18 @@ namespace CapstoneBillCalendar.Controllers
 
             return View();
         }
+
+        public JsonResult GetEvents()
+        {
+            using (BillCalendarDatabaseEntities dc = new BillCalendarDatabaseEntities())
+            {
+                var events = dc.BillPayments.ToList();
+                return new JsonResult
+                {
+                    Data = events,
+                    JsonRequestBehavior = JsonRequestBehavior.AllowGet
+                };
+            }
+        }
     }
 }

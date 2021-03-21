@@ -1,4 +1,69 @@
-﻿@{
-    ViewBag.Title = "Home Page";
+﻿
+@{
+    ViewBag.Title = "Index";
 }
 
+<h2>Index</h2>
+
+<div id="calendar"></div>
+
+@* Importing styles for the Calendar *@
+<link href="~/Content/fullcalendar.min.css" rel="stylesheet" />
+<link href="~/Content/fullcalendar.print.css" rel="stylesheet" media="print" />
+
+@section Scripts{
+    @* Importing JS code for the Calendar*@
+    <script src="~/Scripts/jquery-3.4.1.min.js"></script>
+    <script src="~/Scripts/moment.min.js"></script>
+    <script src="~/Scripts/fullcalendar.min.js"></script>
+    @*<script src="~/Scripts/fullcalendar.helper.min.js"></script>*@
+
+    <script>
+        // $(document).ready() is used when DOM is ready for JavaScript
+        $(document).ready(function () {
+            var billsRecords = [];
+            $.ajax({
+                // Getting data from database
+                type: "GET",
+                url: "/home/GetEvents",
+                success: function (data) {
+                    $.each(data, function (i, v) {
+                        var paymentAmount = " $" + v.PaymentAmount;
+                        var dueColor = v.PaidDate ? v.ThemeColor = v.ThemeColor : v.ThemeColor = "red";
+                        dueColor = v.ThemeColor;
+
+                        // Pushing data to the event object
+                        billsRecords.push({
+                            title: v.PayeeName.concat(paymentAmount),
+                            description: v.Description,
+                            start: moment(v.DueDate),
+                            end: moment(v.PaidDate),
+                            color: dueColor,
+                            allDay: true,
+                        });
+                    })
+                    GenerateCalendar(billsRecords);
+                },
+                error: function (error) {
+                    alert("Das ist unglücklich");
+                }
+            })
+            function GenerateCalendar(billsRecords) {
+                $('#calendar').fullCalendar('destroy'); //Checks and destroys a calendar if it already exists
+                $('#calendar').fullCalendar({           // Creates a new calendar view
+                    contentHeight: 600,
+                    defaultDate: new Date(),
+                    header:
+                    {
+                        left: 'prev,next today',
+                        center: 'title',
+                        right: 'month,basicWeek,basicDay,agenda'
+                    },
+                    eventLimit: true,
+                    eventColor: '#378006',
+                    events: billsRecords
+                });
+            }
+        });
+    </script>
+}

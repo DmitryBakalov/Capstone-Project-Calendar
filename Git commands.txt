@@ -1,0 +1,5 @@
+cd "/c/Users/darkb/source/repos/Capstone-Project-Calendar"
+git status
+git add .
+git commit -m"Any comment"
+git push // Uploads changes to GitHub
