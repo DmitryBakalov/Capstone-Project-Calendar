@@ -36,10 +36,10 @@
 
 @section Scripts{
     @* Importing JS code for the Calendar*@
-    <script src="~/Scripts/jquery-3.4.1.min.js"></script>
     <script src="~/Scripts/moment.min.js"></script>
     <script src="~/Scripts/fullcalendar.min.js"></script>
     @*<script src="~/Scripts/fullcalendar.helper.min.js"></script>*@
+
 
     <script>
         // $(document).ready() is used when DOM is ready for JavaScript
@@ -59,11 +59,20 @@
                         billsRecords.push({
                             title: v.PayeeName.concat(paymentAmount),
                             description: v.Description,
-                            start: moment(v.DueDate),
-                            end: moment(v.PaidDate),
+                            start: moment(v.PaidDate),
+                            end: moment(v.DueDate),
                             color: dueColor,
                             allDay: true,
                         });
+                        //for (var i in billsRecords) {
+
+                        //    document.write("<br>");
+
+                        //    for (var j in billsRecords[i]) {
+                        //        document.write(billsRecords[i][j] + "<br>");
+                        //    }
+                        //}
+
                     })
                     GenerateCalendar(billsRecords);
                 },
@@ -88,11 +97,15 @@
                     eventClick: function (calEvent, jsEvent, view) {
                         $('#detailsModal #recordTitle').text(calEvent.title);
                         var $details = $('<div/>');
-                        $details.append($('<p/>').html('<b>Due Date:</b>' + calEvent.start.format("DD-MMM-YYYY")));
-                        if (calEvent.end != null) {
-                            $details.append($('<p/>').html('<b>Paid Date:</b>' + calEvent.end.format("DD-MMM-YYYY")));
+                        $details.append($('<p/>').html('<b>Due Date: </b>' + calEvent.end.format("DD-MMM-YYYY")));
+
+                        if (calEvent.startStr != null) {
+                            $details.append($('<p/>').html('<b>Paid Date:</b>' + calEvent.start.format("DD-MMM-YYYY")));
                         }
-                        $details.append($('<p/>').html('<b>Description:</b>' + calEvent.description));
+                        else {
+                            $details.append($('<p/>').html('<b>Paid Date:</b> Has <b>NOT</b> been paid yet.'));
+                        }
+                        $details.append($('<p/>').html('<b>Description: </b>' + calEvent.description));
                         $('#detailsModal #bodyDetails').empty().html($details);
 
                         $('#detailsModal').modal();
