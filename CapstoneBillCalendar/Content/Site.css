@@ -22,3 +22,10 @@ select,
 textarea {
     max-width: 280px;
 }
+
+.modal-header {
+    background-color: dimgrey; 
+    color: white; 
+    border-radius: 4px 4px 0 0;
+    
+}
