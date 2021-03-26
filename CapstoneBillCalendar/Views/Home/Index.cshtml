@@ -19,13 +19,19 @@
             </div>
 
             <div class="modal-body">
+                <button id="btnDelete" class="btn btn-default btn-sm pull-right">
+                    <span class="glyphicon glyphicon-remove"></span> Delete
+                </button>
+                <button id="btnEdit" class="btn btn-default btn-sm pull-right" style="margin-right: 5px;">
+                    <span class="glyphicon glyphicon-pencil"></span> Edit
+                </button>
                 <p id="bodyDetails"></p>
             </div>
 
             <div class="modal-footer">
                 <button type="button" class="btn" style="background-color: dimgrey; color: white" data-dismiss="modal">Close</button>
                 <button type="button" class="btn" style="background-color: #2B547E; color: white" data-dismiss="modal">Save changes</button>
-            </div>
+            </div> 
         </div>
     </div>
 </div>
@@ -43,43 +49,52 @@
 
     <script>
         // $(document).ready() is used when DOM is ready for JavaScript
-        $(document).ready(function () {
+        $(document).ready(function ()
+        {
             var billsRecords = [];
-            $.ajax({
-                // Getting data from database
-                type: "GET",
-                url: "/home/GetEvents",
-                success: function (data) {
-                    $.each(data, function (i, v) {
-                        var paymentAmount = " $" + v.PaymentAmount;
-                        var dueColor = v.PaidDate ? v.ThemeColor = v.ThemeColor : v.ThemeColor = "red";
-                        dueColor = v.ThemeColor;
+            var selectedRecord = null;
 
-                        // Pushing data to the event object
-                        billsRecords.push({
-                            title: v.PayeeName.concat(paymentAmount),
-                            description: v.Description,
-                            start: moment(v.DueDate),
-                            endStr: moment(v.PaidDate),
-                            color: dueColor,
-                            allDay: true,
-                        });
-                        //for (var i in billsRecords) {
+            FetchRecordAndRenderCalendar();
+            function FetchRecordAndRenderCalendar() {                
+                billsRecords = []; /*Empty the list before render the calendar*/
 
-                        //    document.write("<br>");
+                $.ajax({
+                    // Getting data from database
+                    type: "GET",
+                    url: "/home/GetEvents",
+                    success: function (data) {
+                        $.each(data, function (i, v) {
+                            var paymentAmount = " $" + v.PaymentAmount;
+                            var dueColor = v.PaidDate ? v.ThemeColor = v.ThemeColor : v.ThemeColor = "red";
+                            dueColor = v.ThemeColor;                            
 
-                        //    for (var j in billsRecords[i]) {
-                        //        document.write(billsRecords[i][j] + "<br>");
-                        //    }
-                        //}
+                            // Pushing data to the event object
+                            billsRecords.push({
+                                PaymentId: v.PaymentId,
+                                title: v.PayeeName.concat(paymentAmount),
+                                description: v.Description,
+                                start: moment(v.DueDate),
+                                endStr: moment(v.PaidDate),
+                                color: dueColor,
+                                allDay: true,
+                            });
+                            //for (var i in billsRecords) {
 
-                    })
-                    GenerateCalendar(billsRecords);
-                },
-                error: function (error) {
-                    alert("Das ist unglücklich");
-                }
-            })
+                            //    document.write("<br>");
+
+                            //    for (var j in billsRecords[i]) {
+                            //        document.write(billsRecords[i][j] + "<br>");
+                            //    }
+                            //}
+                        })
+                        GenerateCalendar(billsRecords);
+                    },
+                    error: function (error) {
+                        alert("Das ist unglücklich");
+                    }
+                })
+            }            
+
             function GenerateCalendar(billsRecords) {
                 $('#calendar').fullCalendar('destroy'); //Checks and destroys a calendar if it already exists
                 $('#calendar').fullCalendar({           // Creates a new calendar view
@@ -94,7 +109,8 @@
                     eventLimit: true,
                     eventColor: '#378006',
                     events: billsRecords,
-                    eventClick: function (calEvent, jsEvent, view) {                        
+                    eventClick: function (calEvent, jsEvent, view) {
+                        selectedRecord = calEvent;
                         $('#detailsModal #recordTitle').text(calEvent.title);
                         var $details = $('<div/>');
                         $details.append($('<p/>').html('<b>Due Date: </b>' + calEvent.start.format("DD-MMM-YYYY")));
@@ -113,6 +129,38 @@
                     }
                 });
             }
+
+            // Edit button opens a model for the record to edit
+            $('#btnEdit').click(function () {
+
+            })
+
+            // Delete button removes the record from the calendar and database
+            $('#btnDelete').click(function () {
+                if (selectedRecord != null && confirm('This record will be deleted permanently. Would you like to preceed?')) {                    
+                    $.ajax({
+                        type: "POST",
+                        url: '/home/DeleteEvent',
+                        data: { 'paymentID': selectedRecord.PaymentId},
+                        success: function (data)
+                        {
+                            if (data.status)
+                            {
+                                alert("Your record succesfully deleted!");
+                                // This function refreshes the calendar
+                                FetchRecordAndRenderCalendar();
+                                $('#detailsModal').modal('hide');
+                            }
+                        },
+                        error: function ()
+                        {
+                            alert('Error! Please try again.');
+                        }
+
+                    })
+                }
+            })
         });
+
     </script>
 }
