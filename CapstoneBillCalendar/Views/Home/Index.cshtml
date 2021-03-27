@@ -7,7 +7,7 @@
 
 <div id="calendar"></div>
 
-@* Modal popup to view and edit data *@
+@* Record Details Modal *@
 <div class="modal fade" id="detailsModal" tabindex="1" role="dialog" aria-labelledby="detailsModalLabel" aria-hidden="false">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -31,31 +31,104 @@
             <div class="modal-footer">
                 <button type="button" class="btn" style="background-color: dimgrey; color: white" data-dismiss="modal">Close</button>
                 <button type="button" class="btn" style="background-color: #2B547E; color: white" data-dismiss="modal">Save changes</button>
-            </div> 
+            </div>
         </div>
     </div>
 </div>
 
-@* Importing styles for the Calendar *@
+@* Record Edit/Save Modal *@
+<div class="modal fade" id="saveModal" tabindex="1" role="dialog" aria-labelledby="detailsModalLabel" aria-hidden="false">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title"><span id="recordTitle"></span></h4>
+            </div>
+
+            <div class="modal-body">
+                <form class="form-horizontal">
+                    <input type="hidden" id="hdRecordID" value="0" />
+                    @* Subject Field *@
+                    <div class="form-group">
+                        <label>Subject</label>
+                        <input type="text" id="txtSubject" class="form-control" />
+                    </div>
+                    @* Due Date Field *@
+                    <div class="form-group">
+                        <label>Due date</label>
+                        <div class="input-group date" id="dueDate1">
+                            <input type="text" id="txtDueDate" class="form-control" />
+                            <span class="input-group-addon">
+                                <span class="glyphicon glyphicon-calendar"></span>
+                            </span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="checkbox">
+                            <label><input type="checkbox" id="chkFullDay" checked="checked" />Full Day</label>
+                        </div>
+                    </div>
+                    @* Paid Date Field *@
+                    <div class="form-group" id="paidDateBlock" style="display: none">
+                        <label>Due date</label>
+                        <div class="input-group date" id="paidDate2">
+                            <input type="text" id="txtPaidDate" class="form-control" />
+                            <span class="input-group-addon">
+                                <span class="glyphicon glyphicon-calendar"></span>
+                            </span>
+                        </div>
+                    </div>
+                    @* Description Field *@
+                    <div class="form-group">
+                        <label>Description</label>
+                        <textarea id="txtDescription" rows="3" class="form-control"></textarea>
+                    </div>
+                    @* Theme Color Field *@
+                    <div class="form-group">
+                        <label>Theme Color</label>
+                        <select id="ddlColor" class="form-control">
+                            <option value="">Default</option>
+                            <option value="red">Red</option>
+                            <option value="gunmetal">Gray</option>
+                            <option value="indigo">Blue</option>
+                            <option value="olive">Green</option>
+                            <option value="purple">Purple</option>
+                        </select>
+                    </div>
+                </form>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" id="btnSave" class="btn" style="background-color: #2B547E; color: white" data-dismiss="modal">Save</button>
+                <button type="button" class="btn" style="background-color: dimgrey; color: white" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@* Importing CSS styles for the Calendar *@
 <link href="~/Content/fullcalendar.min.css" rel="stylesheet" />
 <link href="~/Content/fullcalendar.print.css" rel="stylesheet" media="print" />
+<link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/css/bootstrap-datetimepicker.min.css" rel="stylesheet" />
 
 @section Scripts{
     @* Importing JS code for the Calendar*@
     <script src="~/Scripts/moment.min.js"></script>
     <script src="~/Scripts/fullcalendar.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/js/bootstrap-datetimepicker.min.js"></script>
     @*<script src="~/Scripts/fullcalendar.helper.min.js"></script>*@
 
 
     <script>
         // $(document).ready() is used when DOM is ready for JavaScript
-        $(document).ready(function ()
-        {
+        $(document).ready(function () {
             var billsRecords = [];
             var selectedRecord = null;
 
             FetchRecordAndRenderCalendar();
-            function FetchRecordAndRenderCalendar() {                
+            function FetchRecordAndRenderCalendar() {
                 billsRecords = []; /*Empty the list before render the calendar*/
 
                 $.ajax({
@@ -66,7 +139,7 @@
                         $.each(data, function (i, v) {
                             var paymentAmount = " $" + v.PaymentAmount;
                             var dueColor = v.PaidDate ? v.ThemeColor = v.ThemeColor : v.ThemeColor = "red";
-                            dueColor = v.ThemeColor;                            
+                            dueColor = v.ThemeColor;
 
                             // Pushing data to the event object
                             billsRecords.push({
@@ -93,7 +166,7 @@
                         alert("Das ist unglücklich");
                     }
                 })
-            }            
+            }
 
             function GenerateCalendar(billsRecords) {
                 $('#calendar').fullCalendar('destroy'); //Checks and destroys a calendar if it already exists
@@ -114,9 +187,9 @@
                         $('#detailsModal #recordTitle').text(calEvent.title);
                         var $details = $('<div/>');
                         $details.append($('<p/>').html('<b>Due Date: </b>' + calEvent.start.format("DD-MMM-YYYY")));
-                        
+
                         if (isNaN(calEvent.endStr)) {
-                            $details.append($('<p/>').html('<b>Paid Date:</b> Has <b>NOT</b> been paid yet.'));                            
+                            $details.append($('<p/>').html('<b>Paid Date:</b> Has <b>NOT</b> been paid yet.'));
                         }
                         else {
                             $details.append($('<p/>').html('<b>Paid Date: </b>' + calEvent.endStr.format("DD-MMM-YYYY")));
@@ -137,29 +210,39 @@
 
             // Delete button removes the record from the calendar and database
             $('#btnDelete').click(function () {
-                if (selectedRecord != null && confirm('This record will be deleted permanently. Would you like to preceed?')) {                    
+                if (selectedRecord != null && confirm('This record will be deleted permanently. Would you like to preceed?')) {
                     $.ajax({
                         type: "POST",
                         url: '/home/DeleteEvent',
-                        data: { 'paymentID': selectedRecord.PaymentId},
-                        success: function (data)
-                        {
-                            if (data.status)
-                            {
+                        data: { 'paymentID': selectedRecord.PaymentId },
+                        success: function (data) {
+                            if (data.status) {
                                 alert("Your record succesfully deleted!");
                                 // This function refreshes the calendar
                                 FetchRecordAndRenderCalendar();
                                 $('#detailsModal').modal('hide');
                             }
                         },
-                        error: function ()
-                        {
+                        error: function () {
                             alert('Error! Please try again.');
                         }
 
                     })
                 }
             })
+
+            $('#dueDate1,#paidDate2').datetimepicker({
+                format: 'DD/MM/YYYY HH:mm A'
+            });
+
+            $('#chkFullDay').change(function () {
+                if ($(this).is(':checked')) {
+                    $('#paidDateBlock').hide();
+                }
+                else {
+                    $('#paidDateBlock').show();
+                }
+            });
         });
 
     </script>
