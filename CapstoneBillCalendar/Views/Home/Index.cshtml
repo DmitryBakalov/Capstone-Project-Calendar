@@ -37,16 +37,15 @@
 </div>
 
 @* Record Edit/Save Modal *@
-<div class="modal fade" id="saveModal" tabindex="1" role="dialog" aria-labelledby="detailsModalLabel" aria-hidden="false">
+<div class="modal fade" id="saveModal" tabindex="1" role="dialog" aria-labelledby="saveModalLabel" aria-hidden="false">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
-                <h4 class="modal-title"><span id="recordTitle"></span></h4>
+                <h4 class="modal-title"><span id="recordTitleSaveModal"></span></h4>
             </div>
-
             <div class="modal-body">
                 <form class="form-horizontal">
                     <input type="hidden" id="hdRecordID" value="0" />
@@ -65,6 +64,7 @@
                             </span>
                         </div>
                     </div>
+                    @* Checkbox Full day *@
                     <div class="form-group">
                         <div class="checkbox">
                             <label><input type="checkbox" id="chkFullDay" checked="checked" />Full Day</label>
@@ -99,7 +99,6 @@
                     </div>
                 </form>
             </div>
-
             <div class="modal-footer">
                 <button type="button" id="btnSave" class="btn" style="background-color: #2B547E; color: white" data-dismiss="modal">Save</button>
                 <button type="button" class="btn" style="background-color: dimgrey; color: white" data-dismiss="modal">Close</button>
@@ -107,6 +106,7 @@
         </div>
     </div>
 </div>
+
 
 @* Importing CSS styles for the Calendar *@
 <link href="~/Content/fullcalendar.min.css" rel="stylesheet" />
@@ -119,6 +119,8 @@
     <script src="~/Scripts/fullcalendar.min.js"></script>
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/js/bootstrap-datetimepicker.min.js"></script>
     @*<script src="~/Scripts/fullcalendar.helper.min.js"></script>*@
+
+
 
 
     <script>
@@ -185,6 +187,7 @@
                     eventClick: function (calEvent, jsEvent, view) {
                         selectedRecord = calEvent;
                         $('#detailsModal #recordTitle').text(calEvent.title);
+                        $('#saveModal #recordTitleSaveModal').text(calEvent.title);
                         var $details = $('<div/>');
                         $details.append($('<p/>').html('<b>Due Date: </b>' + calEvent.start.format("DD-MMM-YYYY")));
 
@@ -203,8 +206,11 @@
                 });
             }
 
+            /* ------------------------- jQuery CODE BLOCK---------------------------------- */
+
             // Edit button opens a model for the record to edit
             $('#btnEdit').click(function () {
+                openAddEditForm();
 
             })
 
@@ -243,7 +249,22 @@
                     $('#paidDateBlock').show();
                 }
             });
+
+            function openAddEditForm() {
+                if (selectedRecord != null) {
+                    $('#hdRecordID').val(selectedRecord.paymentID);
+                    $('#txtSubject').val(selectedRecord.title);
+                    $('#txtDueDate').val(selectedRecord.start.format('DD/MM/YYYY HH:mm A'));
+                    $('#chkFullDay').prop('checked', selectedRecord.allDay || false);
+                    $('#chkFullDay').change();
+                    $('#txtPaidDate').val(selectedRecord.endStr != null ? selectedRecord.endStr.format('DD/MM/YYYY HH:mm A') : '');
+                    $('#txtDescription').val(selectedRecord.description);
+                    $('#ddlColor').val(selectedRecord.color);
+                }
+                $('#detailsModal').modal('hide');
+                $('#saveModal').modal();
+            }
         });
 
     </script>
-}
+} 
