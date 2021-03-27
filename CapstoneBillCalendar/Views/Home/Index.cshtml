@@ -44,10 +44,10 @@
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
-                <h4 class="modal-title"><span id="recordTitleSaveModal"></span></h4>
+                <h4 class="modal-title">Save / Edit Record</h4>
             </div>
             <div class="modal-body">
-                <form class="form-horizontal">
+                <form class="col-md-12 form-horizontal">
                     <input type="hidden" id="hdRecordID" value="0" />
                     @* Subject Field *@
                     <div class="form-group">
@@ -56,7 +56,7 @@
                     </div>
                     @* Due Date Field *@
                     <div class="form-group">
-                        <label>Due date</label>
+                        <label>Due Date</label>
                         <div class="input-group date" id="dueDate1">
                             <input type="text" id="txtDueDate" class="form-control" />
                             <span class="input-group-addon">
@@ -67,12 +67,12 @@
                     @* Checkbox Full day *@
                     <div class="form-group">
                         <div class="checkbox">
-                            <label><input type="checkbox" id="chkFullDay" checked="checked" />Full Day</label>
+                            <label><input type="checkbox" id="chkFullDay" checked="checked" />Paid</label>
                         </div>
                     </div>
                     @* Paid Date Field *@
                     <div class="form-group" id="paidDateBlock" style="display: none">
-                        <label>Due date</label>
+                        <label>Paid Date</label>
                         <div class="input-group date" id="paidDate2">
                             <input type="text" id="txtPaidDate" class="form-control" />
                             <span class="input-group-addon">
@@ -254,16 +254,74 @@
                 if (selectedRecord != null) {
                     $('#hdRecordID').val(selectedRecord.paymentID);
                     $('#txtSubject').val(selectedRecord.title);
-                    $('#txtDueDate').val(selectedRecord.start.format('DD/MM/YYYY HH:mm A'));
+                    $('#txtDueDate').val(selectedRecord.start.format('DD-MMM-YYYY'));
                     $('#chkFullDay').prop('checked', selectedRecord.allDay || false);
                     $('#chkFullDay').change();
-                    $('#txtPaidDate').val(selectedRecord.endStr != null ? selectedRecord.endStr.format('DD/MM/YYYY HH:mm A') : '');
+                    $('#txtPaidDate').val(isNaN(selectedRecord.endStr) ? '' : selectedRecord.endStr.format('DD-MMM-YYYY'));
                     $('#txtDescription').val(selectedRecord.description);
                     $('#ddlColor').val(selectedRecord.color);
                 }
                 $('#detailsModal').modal('hide');
                 $('#saveModal').modal();
             }
+
+            $('#btnSave').click(function () {
+                // Validation Rules
+                //alert('You clicked me 1');
+
+                if ($('#txtSubject').val().trim() == "") {
+                    alert('Subject Required');
+                    return;
+                }
+
+                if ($('#txtDueDate').val().trim() == "") {
+                    alert('Due Date Required');
+                    return;
+                }
+
+                if ($('#chkFullDay').is(':checked') == false && $('#txtPaidDate').val().trim() == "") {
+                    alert('Paid Date Required');
+                    return;
+                }
+                else {
+                    var dueDate = moment($('#txtDueDate').val(), 'DD-MMM-YYYY').toDate();
+                    var paidDate = moment($('#txtPaidDate').val(), 'DD-MMM-YYYY').toDate();
+                }
+
+                var dataRecord = {
+                    PaymentId: $('#hdRecordID').val(),
+                    PayeeName: $('#txtSubject').val().trim(),
+                    DueDate: $('#txtDueDate').val(),
+                    PaidDate: $('#chkFullDay').is(':checked' ? $('#txtPaidDate').val().trim() : null),
+                    Description: $('#txtDescription').val(),
+                    ThemeColor: $('#ddlColor').val()
+                }
+                //alert("Informacia " + PaymentId);
+                // Call function to submit data to the server
+                SaveRecord(dataRecord);
+            })
+
+            function SaveRecord(data) {
+                alert('You clicked me 3');
+                $.ajax({
+                    type: "POST",
+                    url: '/home/SaveEvent',
+                    data: data,
+                    success: function (data) {
+                        if (data.status) {
+                            alert("Your record saved!");
+                            // This function refreshes the calendar
+                            FetchRecordAndRenderCalendar();
+                            $('#saveModal').modal('hide');
+                        }
+                    },
+                    error: function () {
+                        alert('Error! Please try again.');
+                    }
+
+                })
+            }
+
         });
 
     </script>
