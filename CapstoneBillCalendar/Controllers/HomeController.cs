@@ -46,11 +46,10 @@ namespace CapstoneBillCalendar.Controllers
             var status = false;
             using (BillCalendarDatabaseEntities dc = new BillCalendarDatabaseEntities())
             {
-                if (e.PaymentId == 0)
+                if (e.PaymentId > 0)
                 {
-                    var test1 = e.PaymentId + 12;
                     // Update the event
-                    var v = dc.BillPayments.Where(a => a.PaymentId == test1).FirstOrDefault();
+                    var v = dc.BillPayments.Where(a => a.PaymentId == e.PaymentId).FirstOrDefault();
                     if (v != null)
                     {
                         v.PayeeName = e.PayeeName;
@@ -65,6 +64,9 @@ namespace CapstoneBillCalendar.Controllers
                 {
                     dc.BillPayments.Add(e);
                 }
+
+                dc.SaveChanges();
+                status = true;
             }
             return new JsonResult { Data = new { status = status } };
         }
