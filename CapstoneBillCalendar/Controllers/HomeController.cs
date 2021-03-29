@@ -53,6 +53,7 @@ namespace CapstoneBillCalendar.Controllers
                     if (v != null)
                     {
                         v.PayeeName = e.PayeeName;
+                        v.PaymentAmount = e.PaymentAmount;
                         v.DueDate = e.DueDate;
                         v.PaidDate = e.PaidDate;
                         v.Description = e.Description;

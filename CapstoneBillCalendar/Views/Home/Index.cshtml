@@ -64,10 +64,16 @@
                             </span>
                         </div>
                     </div>
+                    @* Payment Amount Field *@
+                    <div class="form-group" id="amountBlock" style="display: none">
+                        <label>Payment Amount</label>
+                        <input type="text" id="txtAmount" class="form-control" />
+                    </div>
+
                     @* Checkbox Full day *@
                     <div class="form-group">
                         <div class="checkbox">
-                            <label><input type="checkbox" id="chkFullDay" checked="checked" />Paid</label>
+                            <label><input type="checkbox" id="chkPaid" checked="checked" />Paid</label>
                         </div>
                     </div>
                     @* Paid Date Field *@
@@ -131,7 +137,7 @@
 
             FetchRecordAndRenderCalendar();
             function FetchRecordAndRenderCalendar() {
-                billsRecords = []; /*Empty the list before render the calendar*/
+                billsRecords = []; /*Empty the list before rendering the calendar*/
 
                 $.ajax({
                     // Getting data from database
@@ -146,7 +152,8 @@
                             // Pushing data to the event object
                             billsRecords.push({
                                 PaymentId: v.PaymentId,
-                                title: v.PayeeName.concat(paymentAmount),
+                                title: v.PayeeName,
+                                amount: paymentAmount,
                                 description: v.Description,
                                 start: moment(v.DueDate),
                                 endStr: moment(v.PaidDate),
@@ -208,10 +215,9 @@
 
             /* ------------------------- jQuery CODE BLOCK---------------------------------- */
 
-            // Edit button opens a model for the record to edit
+            // Edit button opens a model where record can be edited
             $('#btnEdit').click(function () {
                 openAddEditForm();
-
             })
 
             // Delete button removes the record from the calendar and database
@@ -241,22 +247,26 @@
                 format: 'DD/MM/YYYY HH:mm A'
             });
 
-            $('#chkFullDay').change(function () {
+            // Hides a Paid date box if payment has not been made
+            $('#chkPaid').change(function () {
                 if ($(this).is(':checked')) {
-                    $('#paidDateBlock').hide();
+                    $('#paidDateBlock').show();
+                    $('#amountBlock').show();
                 }
                 else {
-                    $('#paidDateBlock').show();
+                    $('#paidDateBlock').hide();
+                    $('#amountBlock').hide();
                 }
             });
 
             function openAddEditForm() {
                 if (selectedRecord != null) {
-                    $('#hdRecordID').val(selectedRecord.paymentID);
+                    $('#hdRecordID').val(selectedRecord.PaymentId);
                     $('#txtSubject').val(selectedRecord.title);
                     $('#txtDueDate').val(selectedRecord.start.format('DD-MMM-YYYY'));
-                    $('#chkFullDay').prop('checked', selectedRecord.allDay || false);
-                    $('#chkFullDay').change();
+                    $('#txtAmount').val(selectedRecord.amount);
+                    $('#chkPaid').prop('checked', selectedRecord.allDay || false);
+                    $('#chkPaid').change();
                     $('#txtPaidDate').val(isNaN(selectedRecord.endStr) ? '' : selectedRecord.endStr.format('DD-MMM-YYYY'));
                     $('#txtDescription').val(selectedRecord.description);
                     $('#ddlColor').val(selectedRecord.color);
@@ -279,7 +289,12 @@
                     return;
                 }
 
-                if ($('#chkFullDay').is(':checked') == false && $('#txtPaidDate').val().trim() == "") {
+                if ($('#chkPaid').is(':checked') == true && $('#txtAmount').val().trim() == "") {
+                    alert('Payment Amount Required');
+                    return;
+                }
+
+                if ($('#chkPaid').is(':checked') == true && $('#txtPaidDate').val().trim() == "") {
                     alert('Paid Date Required');
                     return;
                 }
@@ -291,8 +306,9 @@
                 var dataRecord = {
                     PaymentId: $('#hdRecordID').val(),
                     PayeeName: $('#txtSubject').val().trim(),
+                    PaymentAmount: $('#txtAmount').val(),
                     DueDate: $('#txtDueDate').val(),
-                    PaidDate: $('#chkFullDay').is(':checked' ? $('#txtPaidDate').val().trim() : null),
+                    PaidDate: $('#chkPaid').is(':checked' ? $('#txtPaidDate').val().trim() : null),
                     Description: $('#txtDescription').val(),
                     ThemeColor: $('#ddlColor').val()
                 }
