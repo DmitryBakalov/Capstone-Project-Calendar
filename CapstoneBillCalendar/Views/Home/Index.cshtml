@@ -48,7 +48,7 @@
             </div>
             <div class="modal-body">
                 <form class="col-md-12 form-horizontal">
-                    <input type="hidden" id="hdRecordID" value="0" />
+                    <input type="hidden" id="hiddendRecordID" value="0" />
                     @* Subject Field *@
                     <div class="form-group">
                         <label>Subject</label>
@@ -57,7 +57,7 @@
                     @* Due Date Field *@
                     <div class="form-group">
                         <label>Due Date</label>
-                        <div class="input-group date" id="dueDate1">
+                        <div class="input-group date" id="dueDateGroup">
                             <input type="text" id="txtDueDate" class="form-control" />
                             <span class="input-group-addon">
                                 <span class="glyphicon glyphicon-calendar"></span>
@@ -79,7 +79,7 @@
                     @* Paid Date Field *@
                     <div class="form-group" id="paidDateBlock" style="display: none">
                         <label>Paid Date</label>
-                        <div class="input-group date" id="paidDate2">
+                        <div class="input-group date" id="paidDateGroup">
                             <input type="text" id="txtPaidDate" class="form-control" />
                             <span class="input-group-addon">
                                 <span class="glyphicon glyphicon-calendar"></span>
@@ -145,7 +145,7 @@
                     url: "/home/GetEvents",
                     success: function (data) {
                         $.each(data, function (i, v) {
-                            var paymentAmount = " $" + v.PaymentAmount;
+                            var paymentAmount = v.PaidDate ? " $" + v.PaymentAmount : "";
                             var dueColor = v.PaidDate ? v.ThemeColor = v.ThemeColor : v.ThemeColor = "red";
                             dueColor = v.ThemeColor;
 
@@ -200,14 +200,16 @@
 
                         if (isNaN(calEvent.endStr)) {
                             $details.append($('<p/>').html('<b>Paid Date:</b> Has <b>NOT</b> been paid yet.'));
-                            $details.append($('<span/>').html('<i class="fas fa-badger-honey"></i>')); 
+                            $details.append($('<p/>').html('<b>Description: </b>' + calEvent.description));
+                            $details.append($('<span/>').html('<h5 style="color:red; margin-left: 8px;"">DUE</h5><i class="glyphicon glyphicon-remove-sign" style="font-size:50px; color:red"></i>'));
                         }
                         else {
                             $details.append($('<p/>').html('<b>Paid Date: </b>' + calEvent.endStr.format("DD-MMM-YYYY")));
                             $details.append($('<p/>').html('<b>Amount Paid: </b>' + calEvent.amount));
+                            $details.append($('<p/>').html('<b>Description: </b>' + calEvent.description));
+                            $details.append($('<span/>').html('<h5 style = "color:green; margin-left: 8px;">PAID</h5 ><i class="glyphicon glyphicon glyphicon-ok-sign" style="font-size:50px; color:green"></i>'));
                         }
-
-                        $details.append($('<p/>').html('<b>Description: </b>' + calEvent.description));
+                        
                         $('#detailsModal #bodyDetails').empty().html($details);
 
                         $('#detailsModal').modal();
@@ -246,8 +248,8 @@
                 }
             })
 
-            $('#dueDate1,#paidDate2').datetimepicker({
-                format: 'DD/MM/YYYY HH:mm A'
+            $('#dueDateGroup,#paidDateGroup').datetimepicker({
+                format: 'DD-MMM-YYYY'
             });
 
             // Hides a Paid date box if payment has not been made
@@ -264,7 +266,7 @@
 
             function openAddEditForm() {
                 if (selectedRecord != null) {
-                    $('#hdRecordID').val(selectedRecord.PaymentId);
+                    $('#hiddendRecordID').val(selectedRecord.PaymentId);
                     $('#txtSubject').val(selectedRecord.title);
                     $('#txtDueDate').val(selectedRecord.start.format('DD-MMM-YYYY'));
                     $('#txtAmount').val(selectedRecord.amount);
@@ -307,11 +309,12 @@
                 }
 
                 var dataRecord = {
-                    PaymentId: $('#hdRecordID').val(),
+                    PaymentId: $('#hiddendRecordID').val(),
                     PayeeName: $('#txtSubject').val().trim(),
                     PaymentAmount: $('#txtAmount').val(),
                     DueDate: $('#txtDueDate').val(),
-                    PaidDate: $('#chkPaid').is(':checked' ? $('#txtPaidDate').val().trim() : null),
+                    //PaidDate: $('#chkPaid').is(':checked' ? $('#txtPaidDate').val().trim() : null),
+                    PaidDate: $('#txtPaidDate').val(),
                     Description: $('#txtDescription').val(),
                     ThemeColor: $('#ddlColor').val()
                 }
