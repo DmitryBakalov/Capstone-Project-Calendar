@@ -200,10 +200,13 @@
 
                         if (isNaN(calEvent.endStr)) {
                             $details.append($('<p/>').html('<b>Paid Date:</b> Has <b>NOT</b> been paid yet.'));
+                            $details.append($('<span/>').html('<i class="fas fa-badger-honey"></i>')); 
                         }
                         else {
                             $details.append($('<p/>').html('<b>Paid Date: </b>' + calEvent.endStr.format("DD-MMM-YYYY")));
+                            $details.append($('<p/>').html('<b>Amount Paid: </b>' + calEvent.amount));
                         }
+
                         $details.append($('<p/>').html('<b>Description: </b>' + calEvent.description));
                         $('#detailsModal #bodyDetails').empty().html($details);
 
