@@ -28,3 +28,12 @@ textarea {
     border-radius: 4px 4px 0 0;
     
 }
+
+.fc-time{
+   display : none;
+}
+
+.fc-day-grid-event > .fc-content { 
+    white-space: unset !important; 
+
+}
