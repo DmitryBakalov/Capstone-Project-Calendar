@@ -132,6 +132,7 @@
         $(document).ready(function () {
             var billsRecords = [];
             var selectedRecord = null;
+            let today = new Date().toISOString().slice(0, 10);
 
             FetchRecordAndRenderCalendar();
             function FetchRecordAndRenderCalendar() {
@@ -211,7 +212,22 @@
                         $('#detailsModal #bodyDetails').empty().html($details);
 
                         $('#detailsModal').modal();
+                    },
 
+                    selectable: true,
+                    select: function (start, endStr) {
+                        selectedRecord = {
+                            paymentID: 0,
+                            title: "",
+                            amount: 0,
+                            description: "",
+                            start: start,
+                            endStr: today,
+                            allDay: false,
+                            color: ""
+                        };
+                        openAddEditForm();
+                        $('#calendar').fullCalendar('unselect');
                     }
                 });
             }
