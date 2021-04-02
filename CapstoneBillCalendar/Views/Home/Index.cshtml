@@ -231,6 +231,21 @@
                         };
                         openAddEditForm();
                         $('#calendar').fullCalendar('unselect');
+                    },
+
+                    editable: true,
+                    eventDrop: function (record) {
+                        var data = {
+                            PaymentId: record.paymentID,
+                            PayeeName: record.title,
+                            PaymentAmount: record.amount,
+                            DueDate: record.start.format('DD-MMM-YYYY'),
+                            //PaidDate: $('#chkPaid').is(':checked' ? $('#txtPaidDate').val().trim() : null),
+                            PaidDate: record.endStr != isNaN(record.endStr) ? record.endStr.format('DD-MMM-YYYY') : null,
+                            Description: record.description,
+                            ThemeColor: record.color
+                        }
+                        SaveRecord(data);
                     }
                 });
             }
