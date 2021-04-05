@@ -17,7 +17,7 @@ namespace CapstoneBillCalendar.Controllers
             return View("Login");
         }
 
-        public string Login(UserModel userModel)
+        public ActionResult Login(UserModel userModel)
         {
             //return "Results: Usename = " + userModel.Username + " Password = " + userModel.Password;
             SecurityService securityService = new SecurityService();
@@ -25,11 +25,12 @@ namespace CapstoneBillCalendar.Controllers
 
             if (success)
             {
-                return "Success login";
+                return View("LoginSuccess", userModel);
             }
+
             else
             {
-                return "Invalid username/password";
+                return View("LoginFailure", userModel);
             }
         }
     }
