@@ -37,12 +37,3 @@ textarea {
     white-space: unset !important; 
 
 }
-
-#Password {
-	font-family: Arial, Tahoma, Verdana, Calibri; 
-	font-size: 16px; 
-	color: Black; 
-	height: auto; 
-	width: auto;
-	border: 2px solid red;
-}
