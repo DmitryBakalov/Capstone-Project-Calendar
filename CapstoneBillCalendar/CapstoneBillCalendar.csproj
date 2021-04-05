@@ -157,6 +157,8 @@
     </Compile>
     <Compile Include="Models\UserModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Services\Business\SecurityService.cs" />
+    <Compile Include="Services\Data\SecurityDAO.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="App_Data\BillCalendarDatabase.mdf" />

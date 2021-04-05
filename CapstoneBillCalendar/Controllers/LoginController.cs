@@ -1,4 +1,5 @@
 ﻿using CapstoneBillCalendar.Models;
+using CapstoneBillCalendar.Services.Business;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,7 +19,18 @@ namespace CapstoneBillCalendar.Controllers
 
         public string Login(UserModel userModel)
         {
-            return "Results: Usename = " + userModel.Username + " Password = " + userModel.Password;
+            //return "Results: Usename = " + userModel.Username + " Password = " + userModel.Password;
+            SecurityService securityService = new SecurityService();
+            Boolean success = securityService.Authenticate(userModel);
+
+            if (success)
+            {
+                return "Success login";
+            }
+            else
+            {
+                return "Invalid username/password";
+            }
         }
     }
 }
