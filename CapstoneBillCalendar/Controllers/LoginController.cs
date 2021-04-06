@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using System.Web.Security;
 
 namespace CapstoneBillCalendar.Controllers
 {
@@ -17,15 +18,17 @@ namespace CapstoneBillCalendar.Controllers
             return View("Login");
         }
 
+        [HttpPost]
         public ActionResult Login(UserModel userModel)
-        {
-            //return "Results: Usename = " + userModel.Username + " Password = " + userModel.Password;
+        {            
             SecurityService securityService = new SecurityService();
             Boolean success = securityService.Authenticate(userModel);
 
             if (success)
             {
-                return View("LoginSuccess", userModel);
+                FormsAuthentication.SetAuthCookie(userModel.Username, false);
+                return View("~/Views/Home/Index.cshtml", userModel);
+                //return View("LoginSuccess", userModel);
             }
 
             else

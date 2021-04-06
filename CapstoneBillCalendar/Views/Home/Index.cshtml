@@ -1,9 +1,9 @@
-﻿
+﻿@model CapstoneBillCalendar.Models.UserModel
 @{
     ViewBag.Title = "Index";
 }
 
-<h2>Index</h2>
+<h3>Welcome to your Calendar, <b>@Html.DisplayFor(model => model.Username)@ViewData["userName"]!</b></h3><hr>
 
 <div id="calendar"></div>
 
@@ -369,10 +369,8 @@
                     error: function () {
                         alert('Error! Please try again.');
                     }
-
                 })
             }
-
         });
 
     </script>
