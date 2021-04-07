@@ -369,6 +369,7 @@
     <Content Include="Views\Login\Login.cshtml" />
     <Content Include="Views\Login\LoginSuccess.cshtml" />
     <Content Include="Views\Login\LoginFailure.cshtml" />
+    <Content Include="Views\Shared\_MenuBarLogOff.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Views\Test\" />

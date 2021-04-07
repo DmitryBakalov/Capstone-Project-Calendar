@@ -36,5 +36,15 @@ namespace CapstoneBillCalendar.Controllers
                 return View("LoginFailure", userModel);
             }
         }
+
+        [HttpPost]
+        public ActionResult Logout()
+        {
+            FormsAuthentication.SignOut();
+            Session.Clear();
+            Session.RemoveAll();
+            Session.Abandon();
+            return RedirectToAction("Home/Index");
+        }
     }
 }
