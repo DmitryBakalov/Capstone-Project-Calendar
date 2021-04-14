@@ -10,7 +10,7 @@ namespace CapstoneBillCalendar.Services.Business
     // This class will be used to authenticate the users 
     public class SecurityService
     {
-        SecurityDAO daoService = new SecurityDAO();
+        readonly SecurityDAO daoService = new SecurityDAO();
 
         public bool Authenticate(UserModel user)
         {

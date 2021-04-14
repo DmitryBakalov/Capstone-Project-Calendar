@@ -19,6 +19,7 @@ namespace CapstoneBillCalendar.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public ActionResult Login(UserModel userModel)
         {            
             SecurityService securityService = new SecurityService();
@@ -38,13 +39,14 @@ namespace CapstoneBillCalendar.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public ActionResult Logout()
-        {
+        {        
             FormsAuthentication.SignOut();
             Session.Clear();
             Session.RemoveAll();
             Session.Abandon();
-            return RedirectToAction("Home/Index");
+            return RedirectToAction("Index", "Home");
         }
     }
 }
