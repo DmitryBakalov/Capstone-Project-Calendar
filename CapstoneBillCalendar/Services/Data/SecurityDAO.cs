@@ -10,7 +10,7 @@ namespace CapstoneBillCalendar.Services.Data
     // This class will work with the database
     public class SecurityDAO
     {
-        string connectionString = @"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=C:\Users\darkb\source\repos\Capstone-Project-Calendar\CapstoneBillCalendar\App_Data\BillCalendarDatabase.mdf;Integrated Security=True;MultipleActiveResultSets=True;Application Name=EntityFramework";
+        readonly string connectionString = @"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=C:\Users\darkb\source\repos\Capstone-Project-Calendar\CapstoneBillCalendar\App_Data\BillCalendarDatabase.mdf;Integrated Security=True;MultipleActiveResultSets=True;Application Name=EntityFramework";
 
         internal bool FindUser(UserModel user)
         {
