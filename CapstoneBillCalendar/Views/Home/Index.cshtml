@@ -38,7 +38,7 @@
 
             <div class="modal-footer">
                 <button type="button" class="btn" style="background-color: dimgrey; color: white" data-dismiss="modal">Close</button>
-                <button type="button" class="btn" style="background-color: #2B547E; color: white" data-dismiss="modal">Save changes</button>
+                @*<button type="button" class="btn" style="background-color: #2B547E; color: white" data-dismiss="modal">Save changes</button>*@
             </div>
         </div>
     </div>
@@ -72,17 +72,16 @@
                             </span>
                         </div>
                     </div>
-                    @* Payment Amount Field *@
-                    <div class="form-group" id="amountBlock" style="display: none">
-                        <label>Payment Amount</label>
-                        <input type="text" id="txtAmount" class="form-control" />
-                    </div>
-
-                    @* Checkbox Full day *@
+                    @* Checkbox Paid *@
                     <div class="form-group">
                         <div class="checkbox">
                             <label><input type="checkbox" id="chkPaid" checked="checked" />Paid</label>
                         </div>
+                    </div>
+                    @* Payment Amount Field *@
+                    <div class="form-group" id="amountBlock" style="display: none">
+                        <label>Payment Amount</label>
+                        <input type="text" id="txtAmount" class="form-control" />
                     </div>
                     @* Paid Date Field *@
                     <div class="form-group" id="paidDateBlock" style="display: none">
@@ -103,7 +102,7 @@
                     <div class="form-group">
                         <label>Theme Color</label>
                         <select id="ddlColor" class="form-control">
-                            <option value="">Default</option>
+                            <option value="red">Default</option>
                             <option value="khaki">Yellow</option>
                             <option value="gunmetal">Gray</option>
                             <option value="indigo">Blue</option>
@@ -301,6 +300,8 @@
                 else {
                     $('#paidDateBlock').hide();
                     $('#amountBlock').hide();
+                    $('#txtAmount').val("");
+                    $('#txtPaidDate').val("");
                 }
             });
 
@@ -311,7 +312,7 @@
                     $('#txtDueDate').val(selectedRecord.start.format('DD-MMM-YYYY'));
                     $('#txtAmount').val(selectedRecord.amount);
                     $('#chkPaid').prop('checked', selectedRecord.paid1 || false);
-                    $('#chkPaid').change();
+                    //$('#chkPaid').change();
                     $('#txtPaidDate').val(isNaN(selectedRecord.endStr) ? '' : selectedRecord.endStr.format('DD-MMM-YYYY'));
                     $('#txtDescription').val(selectedRecord.description);
                     $('#ddlColor').val(selectedRecord.color);
