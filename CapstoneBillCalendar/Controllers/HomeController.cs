@@ -22,9 +22,9 @@ namespace CapstoneBillCalendar.Controllers
             return View();
         }
 
-        public ActionResult Contact()
+        public ActionResult Calendar()
         {
-            ViewBag.Message = "Our contact page.";
+            ViewBag.Message = "This is your Calendar";
 
             return View();
         }
