@@ -39,8 +39,15 @@ namespace CapstoneBillCalendar.Controllers
                 
                 var events = dc.BillPayments.ToList();
 
-                var filteredEvent = events[0].username;
+                for (int i = 0; i < events.Count; i++)
+                {
+                    var filteredEvent = events[i].username;
 
+                    if (filteredEvent != User.Identity.Name)
+                    {
+                        events.RemoveAt(i);
+                    }
+                }                                
 
                 return new JsonResult
                 {
