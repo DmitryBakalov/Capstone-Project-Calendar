@@ -17,6 +17,7 @@
           <Property Name="Description" Type="nvarchar" MaxLength="300" />
           <Property Name="ThemeColor" Type="nchar" MaxLength="10" />
           <Property Name="Paid" Type="bit" Nullable="false" />
+		  <Property Name="username" Type="nvarchar" MaxLength="50" Nullable="false" />
         </EntityType>
         <EntityContainer Name="BillCalendarDatabaseModelStoreContainer">
           <EntitySet Name="BillPayments" EntityType="Self.BillPayments" Schema="dbo" store:Type="Tables" />
@@ -38,6 +39,7 @@
           <Property Name="Description" Type="String" MaxLength="300" FixedLength="false" Unicode="true" />
           <Property Name="ThemeColor" Type="String" MaxLength="10" FixedLength="true" Unicode="true" />
           <Property Name="Paid" Type="Boolean" Nullable="false" />
+		  <Property Name="username" Type="String" MaxLength="50" Nullable="false" />
         </EntityType>
         <EntityContainer Name="BillCalendarDatabaseEntities" annotation:LazyLoadingEnabled="true">
           <EntitySet Name="BillPayments" EntityType="Self.BillPayment" />
@@ -59,6 +61,7 @@
                 <ScalarProperty Name="Description" ColumnName="Description" />
                 <ScalarProperty Name="ThemeColor" ColumnName="ThemeColor" />
                 <ScalarProperty Name="Paid" ColumnName="Paid" />
+				<ScalarProperty Name="username" ColumnName="username" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

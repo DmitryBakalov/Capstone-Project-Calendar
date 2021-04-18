@@ -12,8 +12,10 @@ namespace CapstoneBillCalendar.Controllers
         public ActionResult Index()
         {
             ViewData["userName"] = User.Identity.Name;
-            return View();
+            //string currentUser = User.Identity.Name;
+            return View();            
         }
+                
 
         public ActionResult About()
         {
@@ -22,10 +24,11 @@ namespace CapstoneBillCalendar.Controllers
             return View();
         }
 
+        [Authorize]
         public ActionResult Calendar()
         {
             ViewBag.Message = "This is your Calendar";
-
+            ViewData["userName"] = User.Identity.Name;
             return View();
         }
 
@@ -33,7 +36,10 @@ namespace CapstoneBillCalendar.Controllers
         {
             using (BillCalendarDatabaseEntities dc = new BillCalendarDatabaseEntities())
             {
+                
                 var events = dc.BillPayments.ToList();
+
+                //events[0] 
                 return new JsonResult
                 {
                     Data = events,
@@ -61,6 +67,7 @@ namespace CapstoneBillCalendar.Controllers
                         v.Description = e.Description;
                         v.Paid = e.Paid;
                         v.ThemeColor = e.ThemeColor;
+                        v.username = e.username;
                     }
                 }
                 else

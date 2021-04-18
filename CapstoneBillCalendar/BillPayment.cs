@@ -22,5 +22,7 @@ namespace CapstoneBillCalendar
         public string Description { get; set; }
         public string ThemeColor { get; set; }
         public bool Paid { get; set; }
+        public string username { get; set; }
+
     }
 }
