@@ -32,26 +32,26 @@ namespace CapstoneBillCalendar.Controllers
             return View();
         }
 
-        public JsonResult GetEvents()
+        public JsonResult GetRecords()
         {
             using (BillCalendarDatabaseEntities dc = new BillCalendarDatabaseEntities())
             {
-                
-                var events = dc.BillPayments.ToList();
+                var filteredRecordsList = new List<BillPayment>();
+                var records = dc.BillPayments.ToList();
 
-                for (int i = 0; i < events.Count; i++)
+                for (int i = 0; i < records.Count; i++)
                 {
-                    var filteredEvent = events[i].username;
+                    var currentUsername = records[i].username;
 
-                    if (filteredEvent != User.Identity.Name)
+                    if (currentUsername == User.Identity.Name)
                     {
-                        events.RemoveAt(i);
+                        filteredRecordsList.Add(records[i]);
                     }
                 }                                
 
                 return new JsonResult
                 {
-                    Data = events,
+                    Data = filteredRecordsList,
                     JsonRequestBehavior = JsonRequestBehavior.AllowGet
                 };
             }

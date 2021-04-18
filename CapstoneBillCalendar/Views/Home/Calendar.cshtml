@@ -150,7 +150,7 @@
                 $.ajax({
                     // Getting data from database
                     type: "GET",
-                    url: "/home/GetEvents",
+                    url: "/home/GetRecords",
                     success: function (data) {
                         $.each(data, function (i, v) {
                             var paymentAmount = v.PaidDate ? " $" + v.PaymentAmount : "";
