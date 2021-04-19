@@ -6,7 +6,7 @@
     ViewBag.Message = "This is your Calendar, ";
 
 }
-<h3>@ViewBag.Message <b>@Html.ViewContext.HttpContext.User.Identity.Name! @Html.ViewContext.HttpContext.User.Identity.AuthenticationType </b></h3>
+<h3>@ViewBag.Message <b>@Html.ViewContext.HttpContext.User.Identity.Name! </b></h3>
 @HttpContext.Current.Session[ "username" ]
 <hr>
 
@@ -136,7 +136,7 @@
     <script src="https://kit.fontawesome.com/a878832b3d.js" crossorigin="anonymous"></script>
     @*<script src="~/Scripts/fullcalendar.helper.min.js"></script>*@
 
-    <script>
+<script>
         // $(document).ready() is used when DOM is ready for JavaScript
         $(document).ready(function () {
             var billsRecords = [];
@@ -235,7 +235,8 @@
                             start: start,
                             endStr: endStr,
                             paid1: false,
-                            color: ""
+                            color: "",
+                            username: ""
                         };
                         openAddEditForm();
                         $('#calendar').fullCalendar('unselect');
@@ -251,7 +252,8 @@
                             //PaidDate: $('#chkPaid').is(':checked' ? $('#txtPaidDate').val().trim() : null),
                             PaidDate: record.endStr != isNaN(record.endStr) ? record.endStr.format('DD-MMM-YYYY') : null,
                             Description: record.description,
-                            ThemeColor: record.color
+                            ThemeColor: record.color,
+                            username: username
                         }
                         SaveRecord(data);
                     }
@@ -356,7 +358,8 @@
                     //PaidDate: $('#chkPaid').is(':checked' ? $('#txtPaidDate').val().trim() : null),
                     PaidDate: $('#txtPaidDate').val(),
                     Description: $('#txtDescription').val(),
-                    ThemeColor: $('#ddlColor').val()
+                    ThemeColor: $('#ddlColor').val(),
+                    username: "@Html.ViewContext.HttpContext.User.Identity.Name",
                 }
                 //alert("Informacia " + PaymentId);
                 // Call function to submit data to the server
@@ -383,7 +386,7 @@
             }
         });
 
-    </script>
+</script>
 }
 
 
