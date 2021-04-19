@@ -102,14 +102,10 @@
                     <div class="form-group">
                         <label>Theme Color</label>
                         <select id="ddlColor" class="form-control">
-                            <option value="red">Default</option>
-                            <option value="khaki">Yellow</option>
                             <option value="gunmetal">Gray</option>
                             <option value="indigo">Blue</option>
                             <option value="green">Green</option>
-                            <option value="olive">Olive</option>
                             <option value="purple">Purple</option>
-                            <option value="orange">Orange</option>
                         </select>
                     </div>
                 </form>
@@ -160,14 +156,13 @@
                             // Pushing data to the event object
                             billsRecords.push({
                                 PaymentId: v.PaymentId,
-                                title: v.PayeeName + paymentAmount + v.username,
+                                title: v.PayeeName + paymentAmount,
                                 amount: paymentAmount,
                                 description: v.Description,
                                 start: moment(v.DueDate),
                                 endStr: moment(v.PaidDate),
                                 color: dueColor,
                                 paid1: false,
-                                username: v.username,
                             });
                             //for (var i in billsRecords) {
 
@@ -253,7 +248,7 @@
                             PaidDate: record.endStr != isNaN(record.endStr) ? record.endStr.format('DD-MMM-YYYY') : null,
                             Description: record.description,
                             ThemeColor: record.color,
-                            username: username
+                            username: "@Html.ViewContext.HttpContext.User.Identity.Name"
                         }
                         SaveRecord(data);
                     }
@@ -314,8 +309,12 @@
                     $('#txtSubject').val(selectedRecord.title);
                     $('#txtDueDate').val(selectedRecord.start.format('DD-MMM-YYYY'));
                     $('#txtAmount').val(selectedRecord.amount);
-                    $('#chkPaid').prop('checked', selectedRecord.paid1 || false);
-                    //$('#chkPaid').change();
+                    if (isNaN(selectedRecord.endStr)) {
+                        $('#chkPaid').prop('checked', false);
+                    }
+                    else { $('#chkPaid').prop('checked', true);}
+                     
+                    $('#chkPaid').change();
                     $('#txtPaidDate').val(isNaN(selectedRecord.endStr) ? '' : selectedRecord.endStr.format('DD-MMM-YYYY'));
                     $('#txtDescription').val(selectedRecord.description);
                     $('#ddlColor').val(selectedRecord.color);
