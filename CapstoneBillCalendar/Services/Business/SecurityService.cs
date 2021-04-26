@@ -7,7 +7,7 @@ using System.Web;
 
 namespace CapstoneBillCalendar.Services.Business
 {
-    // This class will be used to authenticate the users 
+    // This class is used to authenticate the users 
     public class SecurityService
     {
         readonly SecurityDAO daoService = new SecurityDAO();

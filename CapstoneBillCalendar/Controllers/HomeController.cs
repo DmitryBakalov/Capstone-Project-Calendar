@@ -12,14 +12,13 @@ namespace CapstoneBillCalendar.Controllers
         public ActionResult Index()
         {
             ViewData["userName"] = User.Identity.Name;
-            //string currentUser = User.Identity.Name;
             return View();            
         }
                 
 
         public ActionResult About()
         {
-            ViewBag.Message = "Our application description page.";
+            ViewBag.Message = "My contact information.";
 
             return View();
         }

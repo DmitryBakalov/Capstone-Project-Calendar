@@ -6,22 +6,30 @@
 <h3>Welcome to your Calendar Application, <b>@Html.DisplayFor(model => model.Username)@ViewData["userName"]!</b></h3>
 <hr>
 
-<div class="form-group">
-    <div class="col-md-offset-2 col-md-10">
-        @*<input type="button" value="Logout" class="btn btn-primary" onclick="/Login/Logout" />*@
-        <a class="btn btn-primary" href="/Login/Login" role="button">Logout</a>
-    </div>
+<div class="jumbotron">
+    <h1>Dashboard</h1>
+    <p class="lead">ASP.NET is a free web framework for building great Web sites and Web applications using HTML, CSS and JavaScript.</p>
+    <p><a href="/Home/Calendar" class="btn btn-primary btn-lg">Go to Calendar &raquo;</a></p>
 </div>
 
-<address>
-    <b>Contacts:</b><br />
-    13 West Bay Street<br />
-    Savannah, GA 31401<br />
-    <abbr title="Phone">Phone:</abbr>
-    912-444-1778
-</address>
-
-<address>
-    <strong>Support:</strong>   <a href="mailto:Dmitry@example.com">dmitry@example.com</a><br />
-    <strong>Questions:</strong> <a href="mailto:Bakalov@example.com">bakalov@example.com</a>
-</address> 
+<div class="row">
+    <div class="col-md-4">
+        <h2>Getting started</h2>
+        <p>
+            ASP.NET MVC gives you a powerful, patterns-based way to build dynamic websites that
+            enables a clean separation of concerns and gives you full control over markup
+            for enjoyable, agile development.
+        </p>
+        <p><a class="btn btn-default" href="https://go.microsoft.com/fwlink/?LinkId=301865">Learn more &raquo;</a></p>
+    </div>
+    <div class="col-md-4">
+        <h2>Get more libraries</h2>
+        <p>NuGet is a free Visual Studio extension that makes it easy to add, remove, and update libraries and tools in Visual Studio projects.</p>
+        <p><a class="btn btn-default" href="https://go.microsoft.com/fwlink/?LinkId=301866">Learn more &raquo;</a></p>
+    </div>
+    <div class="col-md-4">
+        <h2>Web Hosting</h2>
+        <p>You can easily find a web hosting company that offers the right mix of features and price for your applications.</p>
+        <p><a class="btn btn-default" href="https://go.microsoft.com/fwlink/?LinkId=301867">Learn more &raquo;</a></p>
+    </div>
+</div> 
